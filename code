@@ -1,2 +1,34 @@
-codeone
-codetwo
+# httpd application instalation
+
+- hosts: linuxslaves
+  remote_user: ec2-user
+  become: yes
+  tasks:
+  - name: install Apache
+    yum:
+      name: httpd
+      state: present
+  - name: Start service httpd
+    service:
+      name: httpd
+      state: started
+  - name: Copy and permissions
+    copy:
+      src: /home/ec2-user/httpd.html
+      dest: /var/www/html/httpd.html
+      mode: '777'
+---
+# loop
+
+- hosts: linuxslaves
+  remote_user: ec2-user
+  become: yes
+  tasks:
+  - name: install applications
+    yum: 
+      name: "{{ item }}"
+      state: present
+    loop:
+      - php
+      - mysql
+      - java
